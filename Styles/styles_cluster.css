@@ -1,0 +1,79 @@
+body {
+    font-family: Calibri Light, sans-serif;
+    background-color: rgb(253, 253, 252);
+    color: rgb(223, 51, 59);
+    margin: 0;
+    padding: 0;
+}
+
+#table-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    margin: 20px;
+    overflow-x: auto;  /* This will handle horizontal overflow */
+}
+
+h1, h2 {
+    color: rgb(10, 116, 138);
+}
+
+#lion-logo {
+    width: 150px;
+    height: auto;
+    margin: 20px 0;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(127, 41, 119);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: rgb(217, 169, 178);
+}
+
+/* Enhancements for tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+th, td {
+    padding: 4px 8px;  /* Reduced padding */
+    font-size: 0.9em;  /* Smaller font size */
+    border: 1px solid rgba(223, 51, 59, 0.5);
+    text-align: center;
+
+}
+
+th {
+    background-color: rgb(127, 41, 119);
+    color: white;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: rgba(253, 253, 252, 0.5);
+}
+
+a {
+    color: rgb(127, 41, 119);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: rgb(217, 169, 178);
+}

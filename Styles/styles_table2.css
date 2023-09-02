@@ -1,0 +1,97 @@
+/* Resetting some default styles */
+body, table {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    font-size: 90%; /* Slightly reduced font */
+}
+
+#table-container {
+    overflow: auto;
+    height: 800px; /* Fixed height to make content scrollable */ /* Allows horizontal scrolling if needed */
+    margin: 15px; /* Adding margin to separate table from the page borders */
+}
+
+.dataframe {
+    width: 100%; /* Ensures table stretches to full width */
+    border-collapse: collapse; /* Removes double borders */
+}
+
+/* Headings */
+.dataframe thead th {
+    background-color: #f2f2f2; /* Light grey background */
+    text-align: left;
+    padding: 10px 8px;
+    border: 1px solid #f0f0f0;
+    position: -webkit-sticky; /* For Safari compatibility */
+    position: sticky; /* Header will stick to the top when scrolling */
+    top: 0px; /* Set the sticky position to the top */
+    z-index: 2; /* Ensure it's above the other content */
+    font-size: 80%; /* Slightly reduced font for column names */
+}
+
+/* Rows */
+.dataframe tbody tr:nth-child(odd) {
+    background-color: #f9f9f9; /* Light grey for every other row */
+}
+
+.dataframe tbody tr:nth-child(even) {
+    background-color: #ffffff; /* White for alternating rows */
+}
+
+.dataframe td, .dataframe th {
+    padding: 8px 10px; /* Padding for readability */
+    border: 1px solid #f0f0f0;
+    text-align: center; /* Center values within the table */
+    font-size: 14px; /* Slightly bigger font for table values */
+}
+
+.dataframe th {
+    padding: 8px 10px;
+    border: 1px solid #f0f0f0;
+}
+
+/* Links within the table */
+.dataframe a {
+    color: #007BFF; /* Blue link color */
+    text-decoration: none; /* Removing underlines */
+    padding: 5px; /* Making the touch area bigger for better tap experience */
+    display: inline-block; /* Allows padding to take effect */
+}
+
+.dataframe a:hover {
+    text-decoration: underline; /* Underline on hover for clarity */
+}
+
+/* Media query for devices with limited screen width (e.g., mobile) */
+@media (max-width: 768px) {
+    /* Hide all columns by default */
+    .dataframe th, .dataframe td {
+        display: none;
+    }
+
+    /* Display desired columns */
+    .dataframe th:nth-child(1), .dataframe td:nth-child(1),
+    .dataframe th:nth-child(2), .dataframe td:nth-child(2),
+    .dataframe th:nth-child(5), .dataframe td:nth-child(3),
+    .dataframe th:nth-child(12), .dataframe td:nth-child(4),
+    .dataframe th:nth-child(13), .dataframe td:nth-child(5),
+    .dataframe th:nth-child(15), .dataframe td:nth-child(15) {
+        display: table-cell;
+    }
+
+    body, .dataframe td, .dataframe th {
+        font-size: 12px; /* Further reduced font size for mobile */
+    }
+}
+
+
+/* Left-aligning the Player column */
+.dataframe td:nth-child(1) {
+    text-align: left;
+}
+
+/* Row hover effect */
+.dataframe tbody tr:hover {
+    background-color: #e6f7ff; /* Light blue background on hover */
+}
