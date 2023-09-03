@@ -52,9 +52,16 @@ def load_and_process_detailed_data():
     # Drop duplicate columns
     merged_data.drop(columns=["Player"], inplace=True)
     
-    # Group by team and owner, then aggregate the player stats under each team
+    # Group by team, owner, and player, then sum up the points for each player under each team
     aggregated_data = (
-        merged_data.groupby(['Nome e Cognome', 'Nome della tua squadra FantaSPL'])
+        merged_data.groupby(['Nome e Cognome', 'Nome della tua squadra FantaSPL', 'Selection'])
+        .agg({'Total Points': 'sum'})
+        .reset_index()
+    )
+    
+    # Now aggregate again to create a list of players and their total points under each team
+    aggregated_data = (
+        aggregated_data.groupby(['Nome e Cognome', 'Nome della tua squadra FantaSPL'])
         .agg({
             'Selection': list,
             'Total Points': list,
@@ -67,8 +74,8 @@ def load_and_process_detailed_data():
 # Function to generate HTML content for a DataFrame specific to this use-case
 def generate_team_html_from_dataframe(df, team_name, owner_name):
     # Calculating summary statistics
-    total_points = df['Total Points'].sum()
-    avg_points = df['Total Points'].mean()
+    total_points = df['Total Points'].sum()  # Sum up the points of all players in the team
+    avg_points = df['Total Points'].mean()  # Calculate the average points per player in the team
     
     html_start = f"""<!DOCTYPE html>
 <html lang="en">
