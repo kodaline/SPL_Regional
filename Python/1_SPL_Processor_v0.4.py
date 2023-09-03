@@ -1,6 +1,10 @@
 import math
 import os
 import pandas as pd
+import warnings  # <-- Add this line
+
+# Suppress specific warnings from 'openpyxl' 
+warnings.filterwarnings(action='ignore', message='Data Validation extension is not supported and will be removed', module='openpyxl')
 
 
 # Define constants for directory paths

@@ -1,9 +1,13 @@
 import os
+os.environ["OMP_NUM_THREADS"] = "1"
 import pandas as pd
 import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from typing import Tuple
+
+import sys  # import sys for sys.executable
+
 
 # Get the absolute path of the script's directory
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -151,5 +155,3 @@ output_path = os.path.join(OUTPUT_DIR, "Milano", "clustered_data_web.html")
 
 # Ensure the output directory exists
 os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
-print(save_to_html(output_path, aggregated_data))

@@ -1,13 +1,27 @@
 import os
 import pandas as pd
 
-input_dir = "Input\FantaSquadre"
-excel_dir = "Excel\Milano"
+def get_directory_paths():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # Go up one level to the 'SPL_Regional' directory
+    parent_dir = os.path.dirname(script_dir)
+    input_dir = os.path.join(parent_dir, "Input", "FantaSquadre")
+    excel_dir = os.path.join(parent_dir, "Excel", "Milano")
+    output_dir = os.path.join(parent_dir, "HTML", "Milano", "FantaTeams")
+    return input_dir, excel_dir, output_dir
+
+input_dir, excel_dir, draft_output_dir = get_directory_paths()
 
 def load_and_process_detailed_data():
     # Path to the data files
     fanta_spl_path = os.path.join(input_dir, "FantaSquadre_Milano.xlsx")
     season_points_path = os.path.join(excel_dir, "points_Milano.xlsx")
+    
+    if not os.path.exists(fanta_spl_path):
+        raise FileNotFoundError(f"File not found: {fanta_spl_path}")
+
+    if not os.path.exists(season_points_path):
+        raise FileNotFoundError(f"File not found: {season_points_path}")
     
     # Load the data
     fanta_spl_data = pd.read_excel(fanta_spl_path)
@@ -123,9 +137,6 @@ def generate_team_html_from_dataframe(df, team_name, owner_name):
     return html_start + html_headers + html_body + html_end
 
 
-# Creating a draft directory for saving the HTML files
-draft_output_dir = "HTML\Milano\FantaTeams"
-os.makedirs(draft_output_dir, exist_ok=True)
 
 # Function to save each team's data as an HTML file
 def save_team_html_files(aggregated_data, output_dir):
@@ -148,11 +159,12 @@ def save_team_html_files(aggregated_data, output_dir):
             file.write(html_content)
 
 
+# Creating a draft directory for saving the HTML files
+os.makedirs(draft_output_dir, exist_ok=True)
+
 # Saving HTML files for each team
 detailed_data_aggregated = load_and_process_detailed_data()
 save_team_html_files(detailed_data_aggregated, draft_output_dir)
-# Confirming that the files have been saved
-os.listdir(draft_output_dir)
 
 
 
