@@ -1,5 +1,8 @@
 import subprocess
 import os
+import sys  # import sys for sys.executable
+os.environ["OMP_NUM_THREADS"] = "1"
+
 
 def get_script_directory():
     # If the 'SCRIPT_DIR' environment variable is set, use it
@@ -34,7 +37,7 @@ def run_scripts():
     
     for script in scripts_to_run:
         print(f"Executing {script}...")
-        subprocess.run(["python3", script])
+        subprocess.run([sys.executable, script])  # Use sys.executable instead of 'python3'
         print(f"{script} completed.")
 
 if __name__ == "__main__":
