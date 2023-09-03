@@ -1,27 +1,28 @@
-import pandas as pd
 import os
+import pandas as pd
 
-# Get the absolute path of the script's directory
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Define directories
-INPUT_DIR = os.path.join(SCRIPT_DIR, "../Input")
-EXCEL_DIR = os.path.join(SCRIPT_DIR, "../Excel")
-OUTPUT_DIR = os.path.join( SCRIPT_DIR, "../HTML")
+def get_directory_paths():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    input_dir = os.path.join(script_dir, "../Input")
+    excel_dir = os.path.join(script_dir, "../Excel")
+    output_dir = os.path.join(script_dir, "../HTML")
+    return input_dir, excel_dir, output_dir
 
-def load_and_process_data_inclusive():
-    # Paths for the data files
-    fanta_spl_path = os.path.join(INPUT_DIR, "FantaSquadre", "FantaSquadre_Milano.xlsx")
-    season_points_path = os.path.join(EXCEL_DIR, "Milano", "points_Milano.xlsx")
+
+def load_and_process_data():
+    input_dir, excel_dir, _ = get_directory_paths()
     
-    # Load the data
+    fanta_spl_path = os.path.join(input_dir, "FantaSquadre", "FantaSquadre_Milano.xlsx")
+    season_points_path = os.path.join(excel_dir, "Milano", "points_Milano.xlsx")
+    
     fanta_spl_data = pd.read_excel(fanta_spl_path)
-    player_points = pd.read_excel(season_points_path)
-    player_points = player_points[player_points["Season"]==2]
-    
+    season_points = pd.read_excel(season_points_path)
+    season_points = season_points[season_points["Season"] == 2]
+
     player_selection = (
-        fanta_spl_data
-        .melt(id_vars=['Nome e Cognome', 'Nome della tua squadra FantaSPL'], 
+        fanta_spl_data.melt(
+            id_vars=['Nome e Cognome', 'Nome della tua squadra FantaSPL'],
             value_vars=fanta_spl_data.columns[3:],
             value_name='Selection')
         .drop(columns="variable")
@@ -29,92 +30,86 @@ def load_and_process_data_inclusive():
         .explode('Selection')
         .reset_index(drop=True)
     )
-    
-    # Merge player_selection with player_points
-    team_data_points = (
-        player_selection
-        .merge(player_points[['Player', 'Total Points']], left_on='Selection', right_on='Player', how='left')
+
+    merged_data = player_selection.merge(
+        season_points[['Player', 'Total Points']], left_on='Selection', right_on='Player', how='left'
     )
-    
-    # Compute total points for each fantasy team
-    team_summary_points = (
-        team_data_points.groupby(['Nome e Cognome', 'Nome della tua squadra FantaSPL'])
+
+    summary_data = (
+        merged_data.groupby(['Nome e Cognome', 'Nome della tua squadra FantaSPL'])
         .agg({'Total Points': 'sum'})
         .reset_index()
         .sort_values(by='Total Points', ascending=False)
         .reset_index(drop=True)
     )
-    
-    # Add Rank column based on Total Points
-    team_summary_points['Rank'] = team_summary_points['Total Points'].rank(method='min', ascending=False).astype(int)
-    
-    # Rename columns for clarity
-    column_name_mapping = {
-        'Nome e Cognome': 'Player Name',
-        'Nome della tua squadra FantaSPL': 'Fantasy Team Name',
-        'Total Points': 'Total Points Scored'
-    }
-    team_summary_points.rename(columns=column_name_mapping, inplace=True)
-    
-    return team_summary_points
 
-# Running the function
-team_summary_inclusive_data = load_and_process_data_inclusive()
+    summary_data['Rank'] = summary_data['Total Points'].rank(method='min', ascending=False).astype(int)
 
-# Ensure the Excel output directory exists
-excel_output_folder_path = os.path.join(EXCEL_DIR, "Milano")
-os.makedirs(excel_output_folder_path, exist_ok=True)
+    summary_data.rename(
+        columns={
+            'Nome e Cognome': 'Player Name',
+            'Nome della tua squadra FantaSPL': 'Fantasy Team Name',
+            'Total Points': 'Total Points Scored'
+        },
+        inplace=True
+    )
 
-team_summary_inclusive_data_excel = os.path.join(excel_output_folder_path, "FantaSPL_Classifica.xlsx")
-team_summary_inclusive_data.to_excel(team_summary_inclusive_data_excel, index=False)
+    return summary_data
+
+
+def save_excel(df, filename):
+    df.to_excel(filename, index=False)
+
 
 def generate_html_from_dataframe(df):
-    # Create the basic structure for the HTML content
-    html_string = """
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Team Summary</title>
-        <link href="Styles/styles_table2.css" rel="stylesheet"/>
-    </head>
-    <body>
-        <table border="1" class="dataframe">
+    html_start = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Summary</title>
+    <link href="../../Styles/styles_table2.css" rel="stylesheet"/>
+</head>
+<body>
+    <table border="1" class="dataframe">
     """
-    
-    # Add the table headers
-    html_string += "  <thead>\n    <tr style=\"text-align: right;\">\n"
-    for column in df.columns:
-        html_string += f"      <th>{column}</th>\n"
-    html_string += "    </tr>\n  </thead>\n"
-    
-    # Add the table rows
-    html_string += "  <tbody>\n"
-    for _, row in df.iterrows():
-        html_string += "    <tr>\n"
-        for value in row:
-            html_string += f"      <td>{value}</td>\n"
-        html_string += "    </tr>\n"
-    html_string += "  </tbody>\n"
-    
-    # Close the table and HTML tags
-    html_string += """
-        </table>
-    </body>
-    </html>
-    """
-    
-    return html_string
 
-def save_html_to_file(html_content, filename):
-    with open(filename, "w") as file:
+    html_headers = "  <thead>\n    <tr style=\"text-align: right;\">\n" + \
+                   "".join([f"      <th>{col}</th>\n" for col in df.columns]) + \
+                   "    </tr>\n  </thead>\n"
+
+    html_body = "  <tbody>\n" + \
+                "".join([
+                    "    <tr>\n" +
+                    "".join([f"      <td>{val}</td>\n" for val in row]) +
+                    "    </tr>\n"
+                    for _, row in df.iterrows()
+                ]) + \
+                "  </tbody>\n"
+
+    html_end = """
+    </table>
+</body>
+</html>
+"""
+    return html_start + html_headers + html_body + html_end
+
+
+def save_html(html_content, filename):
+    with open(filename, 'w') as file:
         file.write(html_content)
 
-# Ensure the HTML output directory exists
-html_output_folder_path = os.path.join(OUTPUT_DIR, "Milano")
-os.makedirs(html_output_folder_path, exist_ok=True)
 
-# Saving the generated HTML content to a file
-generated_html_content = generate_html_from_dataframe(team_summary_inclusive_data)
-save_html_to_file(generated_html_content, os.path.join(html_output_folder_path, "FantaSPL_Classifica.html"))
+if __name__ == "__main__":
+    input_dir, excel_dir, output_dir = get_directory_paths()
+
+    summary_data = load_and_process_data()
+
+    excel_output_path = os.path.join(excel_dir, "Milano", "FantaSPL_Classifica.xlsx")
+    os.makedirs(os.path.dirname(excel_output_path), exist_ok=True)
+    save_excel(summary_data, excel_output_path)
+
+    html_output_path = os.path.join(output_dir, "Milano", "FantaSPL_Classifica.html")
+    os.makedirs(os.path.dirname(html_output_path), exist_ok=True)
+    generated_html = generate_html_from_dataframe(summary_data)
+    save_html(generated_html, html_output_path)

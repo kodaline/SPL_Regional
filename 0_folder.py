@@ -1,6 +1,6 @@
 import os
 
-def print_folder_structure(start_path, indent=0, file_limit=5):
+def print_folder_structure(start_path, indent=0, file_limit=8):
     for root, dirs, files in os.walk(start_path):
         level = root.replace(start_path, '').count(os.sep)
         indent_sub = ' ' * 4 * (level - indent)
