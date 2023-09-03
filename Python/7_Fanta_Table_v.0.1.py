@@ -12,10 +12,10 @@ def get_directory_paths():
 
 def load_and_process_data():
     input_dir, excel_dir, _ = get_directory_paths()
-    
+
     fanta_spl_path = os.path.join(input_dir, "FantaSquadre", "FantaSquadre_Milano.xlsx")
     season_points_path = os.path.join(excel_dir, "Milano", "points_Milano.xlsx")
-    
+
     fanta_spl_data = pd.read_excel(fanta_spl_path)
     season_points = pd.read_excel(season_points_path)
     season_points = season_points[season_points["Season"] == 2]
@@ -43,8 +43,6 @@ def load_and_process_data():
         .reset_index(drop=True)
     )
 
-    summary_data['Rank'] = summary_data['Total Points'].rank(method='min', ascending=False).astype(int)
-
     summary_data.rename(
         columns={
             'Nome e Cognome': 'Player Name',
@@ -53,6 +51,12 @@ def load_and_process_data():
         },
         inplace=True
     )
+
+    # Calculate Rank after renaming the 'Total Points' column
+    summary_data['Rank'] = summary_data['Total Points Scored'].rank(method='min', ascending=False).astype(int)
+
+    # Reorder the columns
+    summary_data = summary_data[['Rank', 'Fantasy Team Name', 'Total Points Scored']]
 
     return summary_data
 
@@ -69,9 +73,16 @@ def generate_html_from_dataframe(df):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Summary</title>
     <link href="../../Styles/styles_table2.css" rel="stylesheet"/>
+    <style>
+        .container {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+    </style>
 </head>
 <body>
-    <table border="1" class="dataframe">
+    <div class="container">
+        <table border="1" class="dataframe">
     """
 
     html_headers = "  <thead>\n    <tr style=\"text-align: right;\">\n" + \
@@ -81,14 +92,17 @@ def generate_html_from_dataframe(df):
     html_body = "  <tbody>\n" + \
                 "".join([
                     "    <tr>\n" +
-                    "".join([f"      <td>{val}</td>\n" for val in row]) +
+                    "".join([
+                        f"      <td>{int(val) if pd.api.types.is_number(val) else val}</td>\n"
+                        for val in row]) +
                     "    </tr>\n"
                     for _, row in df.iterrows()
                 ]) + \
                 "  </tbody>\n"
 
     html_end = """
-    </table>
+        </table>
+    </div>
 </body>
 </html>
 """
@@ -96,7 +110,7 @@ def generate_html_from_dataframe(df):
 
 
 def save_html(html_content, filename):
-    with open(filename, 'w') as file:
+    with open(filename, 'w', encoding='utf-8') as file:
         file.write(html_content)
 
 
