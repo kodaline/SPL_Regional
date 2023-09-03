@@ -89,16 +89,17 @@ def generate_html_from_dataframe(df):
                    "".join([f"      <th>{col}</th>\n" for col in df.columns]) + \
                    "    </tr>\n  </thead>\n"
 
-    html_body = "  <tbody>\n" + \
-                "".join([
-                    "    <tr>\n" +
-                    "".join([
-                        f"      <td>{int(val) if pd.api.types.is_number(val) else val}</td>\n"
-                        for val in row]) +
-                    "    </tr>\n"
-                    for _, row in df.iterrows()
-                ]) + \
-                "  </tbody>\n"
+    html_body = "  <tbody>\n"
+    for _, row in df.iterrows():
+        html_body += "    <tr>\n"
+        for idx, val in enumerate(row):
+            if df.columns[idx] == 'Fantasy Team Name':
+                html_body += f"      <td><a href=\"./FantaTeams/{val}.html\">{val}</a></td>\n"
+            else:
+                html_body += f"      <td>{int(val) if pd.api.types.is_number(val) else val}</td>\n"
+        html_body += "    </tr>\n"
+
+    html_body += "  </tbody>\n"
 
     html_end = """
         </table>
