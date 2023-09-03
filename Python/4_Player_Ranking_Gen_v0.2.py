@@ -12,7 +12,7 @@ def update_player_summary(city_name, season_number, file_sorted):
 
     # Updated URL for GitHub Pages (use relative URLs)
     df['Player'] = df['Player'].apply(
-        lambda x: f'<a href="../../{city_name}/s{season_number}/player_graphs/{x}.html">{x}</a>'
+        lambda x: f'<a href="./player_graphs/{x}.html">{x}</a>'
     )
     
     html_string = df.to_html(escape=False, index=False)
@@ -23,7 +23,7 @@ def update_player_summary(city_name, season_number, file_sorted):
         <meta charset="UTF-8">
         <title>Players Summary</title>
         <!-- Updated URL for GitHub Pages -->
-        <link rel="stylesheet" href="../../Styles/styles_table.css">
+        <link rel="stylesheet" href="/SPL_Regional/Styles/styles_table.css">
     </head>
     <body>
         <div id="table-container">

@@ -90,10 +90,9 @@ def generate_html_table_for_cluster(cluster_id: int, summary: pd.Series, player_
     </table>
     """
     
-    #remember when you switch to season 2 you have to change the graph folder
     # Creating the players table
     players_rows = [
-        f"<tr><td><a href='SPL_Regional/HTML/Milano/s1/player_graphs/{player_name}.html'>{player_name}</a></td></tr>"
+        f"<tr><td><a href='s1/player_graphs/{player_name}.html'>{player_name}</a></td></tr>"
         for player_name in player_data['Player']
     ]
     
@@ -124,7 +123,7 @@ def save_to_html(file_path: str, aggregated_data: pd.DataFrame) -> str:
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="stylesheet" type="text/css" href="Styles/styles_cluster.css">
+            <link rel="stylesheet" type="text/css" href="../Styles/styles_cluster.css">
             <link href="Images/favicon_32.png" rel="icon" type="image/png"/>
             <title>SPL Market</title>
         </head>

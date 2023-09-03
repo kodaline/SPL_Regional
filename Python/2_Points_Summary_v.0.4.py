@@ -1,15 +1,15 @@
+from pandas.plotting import table
+from matplotlib.table import table
+from bs4 import BeautifulSoup
+from io import BytesIO
+from plotly.subplots import make_subplots
 import pandas as pd
 import math
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-from pandas.plotting import table
-from matplotlib.table import table
-from bs4 import BeautifulSoup
 import base64
-from io import BytesIO
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
 # Use os.path.abspath to get the absolute path of the script's directory
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
