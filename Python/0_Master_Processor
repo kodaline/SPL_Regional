@@ -1,9 +1,27 @@
 import subprocess
 import os
 
+def get_script_directory():
+    # If the 'SCRIPT_DIR' environment variable is set, use it
+    script_dir = os.environ.get('SCRIPT_DIR')
+    
+    if script_dir:
+        return script_dir
+    
+    # Otherwise, try to find out whether running in GitHub Codespace
+    elif '/workspaces/' in os.getcwd():
+        return '/workspaces/SPL_Regional/Python/'
+    
+    # If not in GitHub Codespace, assume running locally
+    else:
+        # Assume the scripts are in the same directory as this script
+        return os.path.dirname(os.path.abspath(__file__))
+
 def run_scripts():
+    script_directory = get_script_directory()
+    
     # Change to directory where scripts are located
-    os.chdir("/workspaces/SPL_Regional/Python/")
+    os.chdir(script_directory)
     
     scripts_to_run = [
         "1_SPL_Processor_v0.4.py",
