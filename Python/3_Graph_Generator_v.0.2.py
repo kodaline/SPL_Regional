@@ -99,6 +99,7 @@ def save_and_plot_player_graphs_and_tables(city_name, season_points, season, sea
     return f"Combined graphs and tables for Season {season} are saved successfully."
 
 
+
 def main():
     if not os.path.exists(INPUT_DIR):
         print(f"Input directory {INPUT_DIR} does not exist.")

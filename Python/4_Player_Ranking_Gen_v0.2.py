@@ -23,7 +23,7 @@ def update_player_summary(city_name, season_number, file_sorted):
         <meta charset="UTF-8">
         <title>Players Summary</title>
         <!-- Updated URL for GitHub Pages -->
-        <link rel="stylesheet" href="/SPL_Regional/Styles/styles_table.css">
+        <link rel="stylesheet" href="../../../Styles/styles_table.css">
     </head>
     <body>
         <div id="table-container">

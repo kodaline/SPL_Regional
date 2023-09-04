@@ -19,7 +19,7 @@ OUTPUT_DIR = os.path.join( SCRIPT_DIR, os.environ.get("OUTPUT_DIR", "../HTML")) 
 def load_and_process_data(file_path: str) -> pd.DataFrame:
     """Load the data from a file and process it to get the aggregated data."""
     data = pd.read_excel(file_path)
-    data = data[data["Season"] == 1]
+    #data = data[data["Season"] == 1]
 
     agg_data = data.groupby('Player').agg({
         'Total Points': 'sum',
