@@ -7,7 +7,9 @@
       FantaSPL
     </title>
     <!-- Favicon link -->
-    <link href="Images/favicon_32.png" rel="icon" type="image/png" loading="lazy"/>
+    <link href="Images/favicon_32.png" rel="icon" type="image/png"/>
+    <!-- Link to the JavaScript file that contains the image data -->
+    <script src="Images/modified_lion.js"></script>
     <link href="Styles/styles.css" rel="stylesheet"/>
   </head>
   <body>
@@ -16,7 +18,8 @@
       <h1>
         <a href="Blog/SPL_2024_explain.html">SPL</a>
       </h1>
-      <img alt="Lion Logo" id="lion-logo" src="Images/LionLogo-transformed.png"/>
+      <!-- Keep this empty. It will be filled in by JavaScript -->
+      <img alt="Lion Logo" id="lion-logo">
       <h2>
         Fantacalcio   
       </h2>
@@ -25,6 +28,12 @@
       <a href="HTML/Milano/s2/players_summary_s2.html">
         <button>
           Classifica Giocatori 23/24
+        </button>
+      </a>
+      <br/>
+      <a href="HTML/Milano/s1/players_summary_s1.html">
+        <button>
+          Classifica Giocatori 22/23
         </button>
       </a>
       <br/>
@@ -46,5 +55,11 @@
         </button>
       </a>
     </div>
+    <!-- Place the JavaScript here to update the image after the page has loaded -->
+    <script>
+      window.addEventListener('load', function() {
+        document.getElementById("lion-logo").src = truncatedLionLogo;
+      });
+    </script>
   </body>
 </html>
