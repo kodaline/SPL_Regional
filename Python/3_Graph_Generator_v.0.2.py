@@ -75,7 +75,25 @@ def save_and_plot_player_graphs_and_tables(city_name, season_points, season, sea
         plot_graph(fig, 2, 1, player_data['Gameweek'], player_data['Total Points'], 'Total Points', 'scatter', 0)
         plot_graph(fig, 3, 1, player_data['Gameweek'], player_data['Goal Points'], 'Goals', 'bar', 0)
         game_outcomes = player_data['Game Outcome'].value_counts()
-        plot_graph(fig, 4, 1, game_outcomes.index, game_outcomes, 'Game Outcomes', 'bar', 1)
+        # Number of bars
+        num_bars = len(game_outcomes)
+
+        # List of colors for bars
+        bar_colors = RGB_COLOR_PALETTE['bar'] * (num_bars // len(RGB_COLOR_PALETTE['bar']))
+        bar_colors += RGB_COLOR_PALETTE['bar'][:num_bars % len(RGB_COLOR_PALETTE['bar'])]
+
+        # Add trace with modified marker_color
+        fig.add_trace(
+            go.Bar(
+                y=list(game_outcomes.index),
+                x=list(game_outcomes.values),
+                name='Game Outcomes',
+                marker_color=bar_colors,  # Use the bar_colors list here
+                orientation='h'
+            ),
+            row=4,
+            col=1
+        )
         plot_graph(fig, 5, 1, player_data['Gameweek'], player_data['Defensive Score Points'], 'Defensive Score', 'scatter', 1)
         plot_graph(fig, 5, 1, player_data['Gameweek'], player_data['Midfield Score'], 'Midfield Score', 'scatter', 2)
 
@@ -91,14 +109,98 @@ def save_and_plot_player_graphs_and_tables(city_name, season_points, season, sea
         fig.update_xaxes(fixedrange=True)
         fig.update_yaxes(fixedrange=True, title_text="Points", row=2, col=1)
         fig.update_yaxes(fixedrange=True, title_text="Goals", row=3, col=1)
-        fig.update_yaxes(fixedrange=True, title_text="Game Outcomes", row=4, col=1)
+        fig.update_xaxes(fixedrange=True, title_text="Game Outcomes", row=4, col=1)
         fig.update_yaxes(fixedrange=True, title_text="Points", row=5, col=1)
 
         fig.write_html(f"{directory_path}/{player}.html")
 
     return f"Combined graphs and tables for Season {season} are saved successfully."
 
+def save_and_plot_total_player_graphs_and_tables(city_name, total_points, total_sorted):
+    """Generate and save player graphs and tables for a given city for all seasons."""
+    directory_path = os.path.join(OUTPUT_DIR, city_name, "total_player_graphs")
+    os.makedirs(directory_path, exist_ok=True)
+    
+    players = total_points['Player'].unique()
 
+    for player in players:
+        player_data = total_points[total_points['Player'] == player].copy()
+        
+        if total_sorted is None or player_data.empty:
+            continue
+
+        player_summary = total_sorted[total_sorted['Player'] == player].drop(columns=['Player']).T
+        player_summary.columns = [player]
+        
+        # Create gameweek identifier across seasons
+        player_data['Gameweek_Season'] = player_data['Season'].astype(str) + '.' + player_data['Gameweek'].astype(str)
+
+        fig = make_subplots(
+            rows=5, cols=1,
+            shared_xaxes=True,
+            subplot_titles=('Summary Table', 'Total Points per Gameweek', 'Goals per Gameweek', 'Game Outcomes', 'Defensive and Midfield Scores per Gameweek'),
+            vertical_spacing=0.05,
+            row_heights=[0.3, 0.2, 0.2, 0.1, 0.2],
+            specs=[[{'type': 'table'}], [{}], [{}], [{}], [{}]]
+        )
+
+        fig.add_trace(go.Table(
+            header=dict(
+                values=['Metrics', player],
+                fill_color=RGB_COLOR_PALETTE['background'],
+                font_color=RGB_COLOR_PALETTE['text'],
+                font=dict(size=16)
+            ),
+            cells=dict(
+                values=[player_summary.index, player_summary[player]],
+                fill_color=[RGB_COLOR_PALETTE['background'], 'white'],
+                font_color=[RGB_COLOR_PALETTE['text'], 'black'],
+                font=dict(size=14)
+            )
+        ), row=1, col=1)
+
+        plot_graph(fig, 2, 1, player_data['Gameweek_Season'], player_data['Total Points'], 'Total Points', 'scatter', 0)
+        plot_graph(fig, 3, 1, player_data['Gameweek_Season'], player_data['Goal Points'], 'Goals', 'bar', 0)
+        game_outcomes = player_data['Game Outcome'].value_counts()
+        # Number of bars
+        num_bars = len(game_outcomes)
+
+        # List of colors for bars
+        bar_colors = RGB_COLOR_PALETTE['bar'] * (num_bars // len(RGB_COLOR_PALETTE['bar']))
+        bar_colors += RGB_COLOR_PALETTE['bar'][:num_bars % len(RGB_COLOR_PALETTE['bar'])]
+
+        # Add trace with modified marker_color
+        fig.add_trace(
+            go.Bar(
+                y=list(game_outcomes.index),
+                x=list(game_outcomes.values),
+                name='Game Outcomes',
+                marker_color=bar_colors,  # Use the bar_colors list here
+                orientation='h'
+            ),
+            row=4,
+            col=1
+        )
+        plot_graph(fig, 5, 1, player_data['Gameweek_Season'], player_data['Defensive Score Points'], 'Defensive Score', 'scatter', 1)
+        plot_graph(fig, 5, 1, player_data['Gameweek_Season'], player_data['Midfield Score'], 'Midfield Score', 'scatter', 2)
+
+        fig.update_layout(
+            title=f"Total Performance of {player}",
+            title_font=dict(size=20),
+            hovermode="x",
+            plot_bgcolor=RGB_COLOR_PALETTE['background'],
+            paper_bgcolor=RGB_COLOR_PALETTE['background'],
+            font_color=RGB_COLOR_PALETTE['text']
+        )
+
+        fig.update_xaxes(fixedrange=True)
+        fig.update_yaxes(fixedrange=True, title_text="Points", row=2, col=1)
+        fig.update_yaxes(fixedrange=True, title_text="Goals", row=3, col=1)
+        fig.update_xaxes(fixedrange=True, title_text="Game Outcomes", row=4, col=1)
+        fig.update_yaxes(fixedrange=True, title_text="Points", row=5, col=1)
+
+        fig.write_html(f"{directory_path}/{player}.html")
+    return f"Combined graphs and tables for all seasons are saved successfully."
 
 def main():
     if not os.path.exists(INPUT_DIR):
@@ -114,7 +216,8 @@ def main():
         file_paths = [
             os.path.join(city_folder_path, f"points_{city_name}.xlsx"),
             os.path.join(city_folder_path, f"season1_{city_name}.xlsx"),
-            os.path.join(city_folder_path, f"season2_{city_name}.xlsx")
+            os.path.join(city_folder_path, f"season2_{city_name}.xlsx"),
+            os.path.join(city_folder_path, f"total_{city_name}.xlsx")
         ]
 
         if all(os.path.exists(path) for path in file_paths):
@@ -126,6 +229,10 @@ def main():
             save_and_plot_player_graphs_and_tables(city_name, points, 1, local_season_sorted_dict)
             save_and_plot_player_graphs_and_tables(city_name, points, 2, local_season_sorted_dict)
 
+            # Fix: Change 'Milano' to the current city_name for total_points and total_sorted
+            total_points = pd.read_excel(file_paths[0])
+            total_sorted = pd.read_excel(file_paths[3])
+            save_and_plot_total_player_graphs_and_tables(city_name, total_points, total_sorted)
 
 if __name__ == '__main__':
     main()

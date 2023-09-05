@@ -43,14 +43,46 @@ def preprocess_games_df(games_df, points_df):
     """
     # Calculate the winning team for each game
     games_df['Winning Team'] = games_df.apply(calculate_winning_team, axis=1)
+    
+    # Sort the DataFrame by date to ensure that the games are in chronological order
+    games_df = games_df.sort_values('Date')
+
+    # Initialize variables to hold the current season and year
+    current_season = 1
+    current_year = None
+    
+    # List to hold the season numbers
+    seasons = []
+
     # Determine the season for each game
-    games_df['Season'] = games_df['Date'].apply(lambda x: 1 if 1 <= x.month <= 7 and x.year == 2023 else 2)
+    for _, row in games_df.iterrows():
+        year = row['Date'].year
+        month = row['Date'].month
+        
+        # Update the current_year and current_season if this is the first iteration
+        if current_year is None:
+            current_year = year if month >= 9 else year - 1
+
+        # Check if a new season has started
+        if month >= 9 and year > current_year:
+            current_year = year
+            current_season += 1
+
+        # Append the current_season to the seasons list
+        seasons.append(current_season)
+    
+    # Add the seasons list as a new column to the DataFrame
+    games_df['Season'] = seasons
+    
     # Label gameweeks
     games_df['Gameweek'] = games_df.groupby('Season').cumcount() + 1
+    
     # Merge with points_df to get the number of players for each date
     games_df = games_df.merge(points_df.groupby('Date').size().rename('Number of Players'), left_on='Date', right_index=True, how='left')
+    
     # Determine match type based on number of players
     games_df['Match Type'] = games_df['Number of Players'].apply(determine_match_type)
+    
     # Return only the relevant columns
     return games_df[['Date', 'Season', 'Gameweek', 'Match Type', 'Winning Team', 'Team A Goals', 'Team B Goals', 'Number of Players']]
 
