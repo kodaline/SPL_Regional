@@ -21,6 +21,7 @@ def update_player_summary(city_name, season_number, file_sorted):
     <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Players Summary</title>
         <!-- Updated URL for GitHub Pages -->
         <link rel="stylesheet" href="../../../Styles/styles_table.css">
