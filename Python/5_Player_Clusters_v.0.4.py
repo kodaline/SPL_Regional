@@ -33,7 +33,7 @@ def load_and_process_data(file_path: str) -> pd.DataFrame:
 
 def determine_optimal_clusters(scaled_data: pd.DataFrame, min_clusters: int = 3, max_clusters: int = 5) -> int:
     """Determine the optimal number of clusters using the elbow method."""
-    wcss = [KMeans(n_clusters=i, init='k-means++', n_init=10, random_state=42).fit(scaled_data).inertia_ 
+    wcss = [KMeans(n_clusters=i, init='k-means++', n_init=10, random_state=42).fit(scaled_data).inertia_
             for i in range(min_clusters, max_clusters + 1)]
     diffs = np.diff(wcss)
     return np.argmin(diffs) + min_clusters + 1
@@ -44,10 +44,13 @@ def assign_clusters_and_prices(agg_data: pd.DataFrame, scaled_data: pd.DataFrame
     kmeans = KMeans(n_clusters=optimal_clusters, init='k-means++', n_init=10, random_state=42)
     agg_data['Cluster'] = kmeans.fit_predict(scaled_data)
 
-    cluster_averages = agg_data.groupby('Cluster')['Average Points per Game'].mean().sort_values(ascending=False)
+    # Sort clusters by multiple criteria: Total Points, Games Played, and Average Points per Game.
+    cluster_averages = agg_data.groupby('Cluster')[['Total Points', 'Games Played', 'Average Points per Game']].mean().sort_values(
+        by=['Total Points', 'Games Played', 'Average Points per Game'], ascending=[False, False, False])
+
     prices = np.linspace(10, 2, num=optimal_clusters).round().astype(int)
     price_mapping = dict(zip(cluster_averages.index, prices))
-    
+
     agg_data['Price (in $M)'] = agg_data['Cluster'].map(price_mapping)
     return agg_data
 
@@ -119,6 +122,16 @@ def save_to_html(file_path: str, aggregated_data: pd.DataFrame) -> str:
     clustered_data = assign_clusters_and_prices(aggregated_data, scaled_data).reset_index().round(2)
     clustered_summary = cluster_summary(clustered_data).round(2)
 
+    # Sort the summary by 'Price (in $M)' in ascending order
+    clustered_summary = clustered_summary.sort_values(by='Price (in $M)', ascending=True)
+
+    # Remap cluster IDs based on the sorted order.
+    remap_dict = {old_cluster_id: new_cluster_id 
+                  for new_cluster_id, old_cluster_id in enumerate(clustered_summary['Cluster'])}
+    
+    clustered_summary['Cluster'] = clustered_summary['Cluster'].map(remap_dict)
+    clustered_data['Cluster'] = clustered_data['Cluster'].map(remap_dict)
+
     html_content = [
         '''<html>
         <head>
@@ -160,7 +173,7 @@ if __name__ == '__main__':
     else:
         # Load and process data
         aggregated_data = load_and_process_data(file_path)
-
+        print(aggregated_data)
         # Output path
         output_path = os.path.join(OUTPUT_DIR, "Milano", "clustered_data_web.html")
 
