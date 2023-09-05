@@ -31,7 +31,7 @@ def run_scripts():
         "2_Points_Summary_v.0.5.py",
         "3_Graph_Generator_v.0.2.py",
         "4_Player_Ranking_Gen_v0.2.py",
-        "5_Player_Clusters_v.0.3.py",
+        "5_Player_Clusters_v.0.4.py",
         "6_Fanta_Team_gen_v.0.1.py",
         "7_Fanta_Table_v.0.1.py"
     ]
