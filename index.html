@@ -11,19 +11,35 @@
     <!-- Link to the JavaScript file that contains the image data -->
     <script src="Images/modified_lion.js"></script>
     <link href="Styles/styles.css" rel="stylesheet"/>
+    <style>
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="table-container">
       <!-- Make the title SPL clickable by wrapping it with an anchor tag -->
       <h1>
-        <a href="Blog/SPL_2024_explain.html">SPL</a>
+        SPL
       </h1>
       <!-- Keep this empty. It will be filled in by JavaScript -->
       <img alt="Lion Logo" id="lion-logo">
       <h2>
-        Fantacalcio   
+        Fantacalcio
       </h2>
       <!-- Removed the button that was here -->
+      <br/>
+      <a href="Blog/SPL_2024_explain.html">
+        <button>
+          SPL - Come Funziona
+        </button>
+      </a>
       <br/>
       <a href="HTML/Milano/s1/players_summary_s1.html">
         <button>
@@ -59,6 +75,15 @@
     <script>
       window.addEventListener('load', function() {
         document.getElementById("lion-logo").src = truncatedLionLogo;
+        
+        // Start rotating the lion logo every 5 seconds
+        setInterval(function() {
+          const lionLogo = document.getElementById('lion-logo');
+          lionLogo.style.animation = 'none';
+          setTimeout(function() {
+            lionLogo.style.animation = 'rotate 0.5s linear';
+          }, 0);
+        }, 2000);
       });
     </script>
   </body>
