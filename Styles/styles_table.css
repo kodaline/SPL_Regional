@@ -62,7 +62,7 @@ body, table {
     #table-container {
         position: absolute;
         bottom: 0;
-        max-height: 80vh;  /* Adjust the max-height based on screen height */
+        max-height: 90vh;  /* Adjust the max-height based on screen height */
         overflow-y: scroll;  /* Enable vertical scrolling */
     }
 
