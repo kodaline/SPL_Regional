@@ -59,3 +59,23 @@ button:active {
     transform: translateY(0);  /* Reset lift effect on button press */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Reduce shadow on button press for a pressed effect */
 }
+@keyframes marquee {
+    0%   { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+}
+
+.news-marquee {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    background-color: #f5f5f5;
+    padding: 5px 0;
+}
+
+.news-marquee span {
+    display: inline-block;
+    animation: marquee 80s linear infinite;
+}
