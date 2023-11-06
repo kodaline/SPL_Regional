@@ -79,3 +79,19 @@ button:active {
     display: inline-block;
     animation: marquee 120s linear infinite;
 }
+
+
+/* Add this at the bottom of your styles.css file */
+.snowflake {
+    position: fixed;
+    top: -10px;
+    color: #FFD700;
+    opacity: 0.8;
+    user-select: none;
+    z-index: 1000;
+  }
+  
+  @keyframes fall {
+    0% { opacity: 0.8; }
+    100% { top: 100vh; opacity: 0; }
+  }

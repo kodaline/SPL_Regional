@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>
+      FantaSPL
+    </title>
+    <!-- Favicon link -->
+    <link href="Images/favicon_32.png" rel="icon" type="image/png"/>
+    <!-- Link to the JavaScript file that contains the image data -->
+    <script src="Images/modified_lion_santa.js"></script>
+    <link href="Styles/styles.css" rel="stylesheet"/>
+    <style>
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="table-container">
+      <!-- Make the title SPL clickable by wrapping it with an anchor tag -->
+      <h1>
+        SPL
+      </h1>
+      <!-- Keep this empty. It will be filled in by JavaScript -->
+      <img alt="Lion Logo" id="lion-logo">
+      <h2>
+        Fantacalcio
+      </h2>
+      <!-- Removed the button that was here -->
+      <br/>
+      <a href="Blog/SPL_2024_explain.html">
+        <button>
+          SPL - Come Funziona
+        </button>
+      </a>
+      <br/>
+      <a href="HTML/Milano/s2/players_summary_s2.html">
+        <button>
+          Classifica Giocatori 23/24
+        </button>
+      </a>
+      <br/>
+      <a href="HTML\Milano\FantaSPL_Classifica.html">
+        <button>
+          Classifica FantaSPL 23/24
+        </button>
+      </a>
+      <br/>
+      <a href="HTML/Milano/clustered_data_web.html">
+        <button>
+          FantaSPL 23/24 - Mercato
+        </button>
+      </a>
+      <br/>
+      <a href="https://forms.gle/uaPHVcecfJ9y8pFd7">
+        <button>
+          Torneo SantaSPL - Iscrizione
+        </button>
+      </a>
+    </div>
+    <!-- Place the JavaScript here to update the image after the page has loaded -->
+    <script>
+      window.addEventListener('load', function() {
+        document.getElementById("lion-logo").src = truncatedLionLogo;
+        
+        // Start rotating the lion logo every 5 seconds
+        setInterval(function() {
+          const lionLogo = document.getElementById('lion-logo');
+          lionLogo.style.animation = 'none';
+          setTimeout(function() {
+            lionLogo.style.animation = 'rotate 0.5s linear';
+          }, 0);
+        }, 2000);
+      });
+    </script>
+    <div class="news-marquee">
+      <span>
+        |SPLNews|SPLNews|SPLNews|SPLNews|SPLNews|SPLNews|SPLNews|-->
+        |SPLNews|: Tito KO per sgroppa intestinale – Un attacco di dissenteria schianta Tito in panca (o meglio, sul trono). Il guerriero del FantaSPL getta la spugna e il rotolo: salta la prossima partita tra una corsa e l'altra al bagno. Squadra in ansia: chi lo sostituirà nello spot del WC?
+        |SPLNews|: L'attesa è palpabile: con la variabilità delle presenze, chi saprà adattarsi meglio e conquistare i preziosi punti in palio stasera? Gli occhi sono puntati sui veterani e sui nuovi talenti emergenti.
+        |SPLNews|: Tito rischia il punteggio penalità per il suo ritardo. "Dovevo fare benzina, ma chi poteva immaginare che avrebbe influito sul mio punteggio?" si difende Tito. La decisione finale è attesa con ansia.
+        |SPLNews|: Esordio post-operazione di Wissam: "Sono tornato più forte di prima." Ma tutti si chiedono: che operazione ha fatto?
+        |SPLNews|: Ore 22, l'ora del terrore: giocatori trepidanti al ricordo dello sgrido del custode. Questa settimana chi avrà il coraggio di entrare per primo?
+        |SPLNews|: Chi è questo Amico di Cava? No minchia raga è forte.
+        |SPLNews|: Mazzu getta l'ombra sul campo: "Antidoping post partita - ma io sono al sicuro!" Chi rischia?
+        |SPLNews|: Ludovico Righi richiede chiarezza - "Sono secondo e spero che l’impatto mediatico porti a galla la verità nascosta da luglio". Trump risponde direttamente da Mar-a-Lago: "Fake News."
+        |SPLNews|: Luca Stoppi trascina la squadra - "Tre gol e zero errori, difensore letale sulla griglia!"
+        |SPLNews|: Mario Croce - "Con tre marcature, si conferma una nuova minaccia SPL"
+        |SPLNews|: Cerro: "Sto entrando in stazionee" - ma non ha il biglietto, scatta la denuncia
+        |SPLNews|: Penalità cancellazione? Daniele Miccoli - "Pensavo di rimettermi ma niente non riesco" a poche ore dall'inizio.
+        |SPLNews|: Cri Diaz pronto ma stroncato  - "Sì se volete giocare 8vs8 entro io".
+        |SPLNews|: Rumors: T'eamCulo interessato a Tito. Negoziazioni in corso?
+        |SPLNews|: Damiano dichiara: "Fel Lazio è la mia prossima destinazione".
+      </span>
+    </div>
+  </body>
+</html>
